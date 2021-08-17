@@ -67,6 +67,6 @@ if __name__ == "__main__":
     # Generate as many legacy avatars as requested
     for path in generate_path(args.number_of_avatars):
         insert_db_row(conn, path)
-        create_s3_object(s3, S3_BUCKET_NAME, path)
+        create_s3_object(s3, S3_LEGACY_BUCKET_NAME, path)
 
     print(f"Created {args.number_of_avatars} legacy avatars")
