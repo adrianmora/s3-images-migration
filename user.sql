@@ -1,3 +1,4 @@
 CREATE USER sre_user WITH PASSWORD '<change_password>';
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA images TO sre_user;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA images TO sre_user;
 GRANT CONNECT ON DATABASE "proddatabase" to sre_user;
