@@ -68,15 +68,6 @@ def move_avatar(s3_conn, db_conn, row_id, path):
         logging.error(f"Error during the migration process : {e}")
         sys.exit(1)
 
-def move_avatars(s3_conn, db_conn, legacy_rows):
-    try:
-        for row in legacy_rows:
-            move_s3_object(s3_conn, row[1])
-            update_db_row(db_conn, row[0], row[1])
-    except Exception as e:
-        logging.error(f"Error during the migration process : {e}")
-        sys.exit(1)
-
 def check_db_rows(db_conn):
     try:
         cur = db_conn.cursor()
@@ -99,36 +90,6 @@ def update_db_row(db_conn, row_id, path):
         print('Database entry for ' + path + ' updated to ' + new_path)
     except Exception as e:
         logging.error(f"Error updating paths in the database: {e}")
-        sys.exit(1)
-
-def list_s3_objects(s3_conn, bucket, prefix):
-    try:
-        s3_bucket = s3_conn.Bucket(bucket)
-        for s3_bucket_object in s3_bucket.objects.filter(Prefix=prefix):
-            print(s3_bucket_object.key)
-    except Exception as e:
-        logging.error(f"Error while listing s3 objects: {e}")
-        sys.exit(1)
-
-def move_s3_objects(s3_conn):
-    try:
-        s3_legacy=s3_conn.Bucket(S3_LEGACY_BUCKET_NAME)
-        s3_production=s3_conn.Bucket(S3_PRODUCTION_BUCKET_NAME)
-
-        # Iterate over all the objects under the Legacy bucket prefix
-        for s3_bucket_object in s3_legacy.objects.filter(Prefix=LEGACY_PREFIX):
-            copy_source = {
-                'Bucket': S3_LEGACY_BUCKET_NAME,
-                'Key': s3_bucket_object.key
-            }
-            new_key=s3_bucket_object.key.replace(LEGACY_PREFIX, PRODUCTION_PREFIX)
-            s3_production.copy(copy_source, new_key)
-
-            # then delete the original object after copying to destination bucket
-            s3_bucket_object.delete()
-            print('s3://'+ S3_LEGACY_BUCKET_NAME + '/'+ s3_bucket_object.key +' moved to s3://'+ S3_PRODUCTION_BUCKET_NAME +'/'+ new_key)
-    except Exception as e:
-        logging.error(f"Error while moving objects between s3 buckets: {e}")
         sys.exit(1)
 
 def move_s3_object(s3_conn, path):
