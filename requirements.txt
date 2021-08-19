@@ -1,0 +1,15 @@
+aws-cfn-bootstrap==2.0
+boto3==1.18.22
+botocore==1.21.22
+docutils==0.14
+jmespath==0.10.0
+lockfile==0.11.0
+p==0.0.0
+psycopg2==2.9.1
+pystache==0.5.4
+python-daemon==2.2.3
+python-dateutil==2.8.2
+s3transfer==0.5.0
+simplejson==3.2.0
+six==1.16.0
+urllib3==1.26.6
